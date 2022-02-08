@@ -1,0 +1,46 @@
+import mongoengine as me
+me.connect(host="mongodb://acmdevtest:Awing%402021@118.70.206.204:27017/testForecast")
+
+from pymongo import ReadPreference 
+from datetime import datetime
+import os
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+#class lấy dữ liệu thông tin từ mongodb 
+class ForecastInfo(me.Document):
+    domainId = me.IntField(required= True)
+    name = me.StringField(required = False)
+    description = me.StringField(required= False)
+    startForecastDate = me.DateTimeField(required= True)
+    createdDate = me.DateTimeField(required= True)
+    # Meta variables
+    meta = {
+        'collection': "forecastInfo"
+        }
+
+class PlaceView(me.Document):
+    forecastId = me.StringField(required= True)
+    placeId = me.IntField(required = True)
+    view = me.IntField(required = True)
+    date = me.DateTimeField(required = True)
+    createDate = me.DateTimeField(required = False)
+    # Meta variables
+    meta = {
+        'collection': "placeView"
+        }
+
+class Holiday(me.Document):
+    forecastId = me.StringField(required= True)
+    date = me.DateTimeField(required = True)
+    holidayType = me.StringField(required = True, db_field='type')
+    createDate = me.DateTimeField(required = False)
+    # Meta variables
+    meta = {
+        'collection': "holiday"
+        }
+#lấy thông tin của placeId và ForecastId 
+placeview_1 = PlaceView.objects(forecastId = "616c64a68d568df38e0e5bf7", placeId = 5760202989037582000)
+list_placeview_1 = placeview_1.as_pymongo()
+
